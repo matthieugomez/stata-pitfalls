@@ -18,11 +18,11 @@ I have uploaded this list on Github so that it can be easily modified: feel free
 
 ### Sort
 
-- Missing observations for numeric variables are sorted last in Stata. Therefore expressions such as
+- Missing observations for numeric variables are sorted last. Therefore expressions such as
 	```
 	bysort id (time): gen temp = time[_N]
 	```
-	returns a missing value rather than the maximum time if `time` observation is missing. Instead, use
+	return a missing value rather than the maximum time if `time` observation is missing. Instead, use
 
 	```
 	egen temp = max(time), by(id)
@@ -55,7 +55,7 @@ I have uploaded this list on Github so that it can be easily modified: feel free
 
 ### Arithmetic operations
 
-- *Explicit* arithmetic operations containing a missing value return a missing value
+- *Explicit* arithmetic operations containing missing values return missing values
 
 	```
 	. clear all
@@ -89,7 +89,7 @@ I have uploaded this list on Github so that it can be easily modified: feel free
 	```
 	Note that, contrary to `sum`, the functions `mean` or `sd` return missing values : internally, these commands evaluate an expression of the form `0/0` (where the denominator is the number of non missing observations) which evaluates to missing in Stata.
 
-	If you want the sum of missing observations to be missing rather than zero, use a temporary variable to count non - missing variables
+	If you want the sum of missing observations to be missing rather than zero, use a temporary variable to count non-missing observations.
 
 	```
 	. clear all
@@ -113,7 +113,7 @@ I have uploaded this list on Github so that it can be easily modified: feel free
 	The issue is discussed on the Statalist [here](http://www.stata.com/statalist/archive/2004-07/msg00779.html), [here](http://www.stata.com/statalist/archive/2007-10/msg00806.html), [here](http://www.stata.com/statalist/archive/2010-02/msg00422.html)
 
 
-- Don't use summary variables (i.e. obtained after `collapse` or `egen`) in a statistical model without checking first that these variables *are missing for the same observations.*
+- Don't use summary variables (i.e. obtained after `collapse` or `egen`) in a statistical model without checking first that these variables are missing for the same observations.
 
 	As an example, the following code generates `y` and `x` such that `y = 2*x + runiform()`,  then set `x` to missing every 13 rows, and `y` to missing every 11 rows.
 
