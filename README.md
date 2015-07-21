@@ -2,7 +2,19 @@ Common situations where Stata silently returns something different from what you
 
 I have uploaded this list on Github so that it can be easily modified: feel free to [edit it](https://github.com/matthieugomez/stata-gotchas/edit/master/README.md).
 
-# Missing observations
+
+# Table of content:
+* [Missing values](https://github.com/matthieugomez/stata-pitfalls#missing-values)
+* [Booleans](https://github.com/matthieugomez/stata-pitfalls#booleans)
+* [Floats](https://github.com/matthieugomez/stata-pitfalls#floats)
+* [Strings](https://github.com/matthieugomez/stata-pitfalls#strings)
+* [Collapse](https://github.com/matthieugomez/stata-pitfalls#collapse)
+* [Merge](https://github.com/matthieugomez/stata-pitfalls#merge)
+* [Panel Data](https://github.com/matthieugomez/stata-pitfalls#panel-data)
+
+
+
+# Missing values
 
 ### Sort
 
@@ -145,107 +157,7 @@ egen temp = max(time), by(id)
 
 
 
-
-# Boolean
-Stata considers any value different from zero is considered as true
-
-
-### Missing
-Since missing values are considered to be higher than anything, they are, in particular, true. Therefore, in the following command, the last condition evaluates to true for all observations
-```
-. clear all
-. set obs 10
-. gen condition = 1 if _n >= 5
-. keep if condition
-(0 observations deleted)
-```
-
-To avoid this issue, create boolean variable alternatively equal 1 and 0,  rather than rather 1 and missing.
-
-```
-. clear all
-. set obs 10
-. gen condition =_n >= 5
-. keep if condition
-(4 observations deleted)
-```
-
-### Count
-`egen count` and `collapse (count)` count the number of **non missing observations**, not the number of observations that evaluate to true. Therefore, the following code is wrong
-
-```
-. egen temp = count(state == 30)
-```
-Instead, use
-
-```
-. egen temp = sum(state == 30)
-```
-
-
-
-
-# Collapse
-Beyond the issue with missing value mentioned above, `collapse` can give unexpected results when using weights.
-
--  Observations with missing or zero weights are removed from  *all* the computations, even those in (rawsum)
-
-	```
-	. clear all
-	. set obs 2
-	. gen a  = 1
-	. gen w = 1 if _n == 1
-	. collapse (rawsum) a [w = w]
-	   +---+
-	   | a |
-	   |---|
-	1. | 1 |
-	   +---+
-	```
-
-	The topic is discussed on the Statalist [here](http://www.stata.com/statalist/archive/2013-09/msg00958.html), and [here](http://www.stata.com/statalist/archive/2010-03/msg01958.html)
-
-
--  `collapse (sum) [aw]` (the default) and `collapse (sum) [pw]` returns` \sum w_i v_i` where w_i is normalized so that \sum w_i = _N. 
-
-	```
-	. clear all
-	. set obs 2
-	. gen a  = _n
-	. gen b = 1
-	. gen w = _n
-	. collapse (sum) a [aw = w]
-	```
-
-	If you want `collapse(sum) ` to return `\sum w_i v_i`, use `iweight` or `fweight`
-
-	```
-	. clear all
-	. set obs 2
-	. gen a  = _n
-	. gen b = 1
-	. gen w = _n
-	. collapse (sum) a [iw = w]
-	```
-
-
-# Merge
-- merge m:m does not create a dataset with all the possible combinations between the master and the using dataset. To do a "true" m:m join (i.e. a SQL Outer join or in R, a default `merge`), use `joinby`. The issue is discussed [here](http://www.stata.com/statalist/archive/2012-01/msg00773.html).
-- When using the option `update`, the variable `_merge` takes values from 1 to 5
-	```
-	not matched                                 
-	        from master                           (_merge==1)
-	        from using                            (_merge==2)
-	matched                                     
-	        not updated                           (_merge==3)
-	        missing updated                       (_merge==4)
-	        nonmissing conflict                   (_merge==5)
-
-	```
-	In particular, usual options such as `keep if _merge == 3` takes a different meaning with the option `update`. To avoid this problem, use the `keep` option as in `merge 1:1 using usingfile, keep(matched)` which corresponds to `keep if inrange(_merge, 3, 5)`
-
-
-# Type
+# Floats
 Variables in Stata are stored in float (called "single precision" or Float32 in other languages) by default, which creates some specific issues.
 
 ### Float vs integer
@@ -321,8 +233,108 @@ A better solution is probably to avoid comparing floating numbers to other float
 
 Types issues are discusses [here](http://blog.stata.com/tag/precision/)
 
-# Regex
-Stata does not support positive / negative look aheads / behind, nor counting operators (using braces).
+
+
+# Booleans
+Stata considers any value different from zero is considered as true
+
+
+### Missing values
+Since missing values are considered to be higher than anything, they are, in particular, true. Therefore, in the following command, the last condition evaluates to true for all observations
+```
+. clear all
+. set obs 10
+. gen condition = 1 if _n >= 5
+. keep if condition
+(0 observations deleted)
+```
+
+To avoid this issue, create boolean variable alternatively equal 1 and 0,  rather than rather 1 and missing.
+
+```
+. clear all
+. set obs 10
+. gen condition =_n >= 5
+. keep if condition
+(4 observations deleted)
+```
+
+### Count
+`egen count` and `collapse (count)` count the number of **non missing observations**, not the number of observations that evaluate to true. Therefore, the following code is wrong
+
+```
+. egen temp = count(state == 30)
+```
+Instead, use
+
+```
+. egen temp = sum(state == 30)
+```
+
+
+# Strings
+- Regex: Stata does not support positive / negative look aheads / behind, nor counting operators (using braces).
+
+
+# Collapse
+Beyond the issue with missing value mentioned above, `collapse` can give unexpected results when using weights.
+
+-  Observations with missing or zero weights are removed from  *all* the computations, even those in (rawsum)
+
+	```
+	. clear all
+	. set obs 2
+	. gen a  = 1
+	. gen w = 1 if _n == 1
+	. collapse (rawsum) a [w = w]
+	   +---+
+	   | a |
+	   |---|
+	1. | 1 |
+	   +---+
+	```
+
+	The topic is discussed on the Statalist [here](http://www.stata.com/statalist/archive/2013-09/msg00958.html), and [here](http://www.stata.com/statalist/archive/2010-03/msg01958.html)
+
+
+-  `collapse (sum) [aw]` (the default) and `collapse (sum) [pw]` returns` \sum w_i v_i` where w_i is normalized so that \sum w_i = _N. 
+
+	```
+	. clear all
+	. set obs 2
+	. gen a  = _n
+	. gen b = 1
+	. gen w = _n
+	. collapse (sum) a [aw = w]
+	```
+
+	If you want `collapse(sum) ` to return `\sum w_i v_i`, use `iweight` or `fweight`
+
+	```
+	. clear all
+	. set obs 2
+	. gen a  = _n
+	. gen b = 1
+	. gen w = _n
+	. collapse (sum) a [iw = w]
+	```
+
+
+# Merge
+- merge m:m does not create a dataset with all the possible combinations between the master and the using dataset. To do a "true" m:m join (i.e. a SQL Outer join or in R, a default `merge`), use `joinby`. The issue is discussed [here](http://www.stata.com/statalist/archive/2012-01/msg00773.html).
+- When using the option `update`, the variable `_merge` takes values from 1 to 5
+	```
+	not matched                                 
+	        from master                           (_merge==1)
+	        from using                            (_merge==2)
+	matched                                     
+	        not updated                           (_merge==3)
+	        missing updated                       (_merge==4)
+	        nonmissing conflict                   (_merge==5)
+
+	```
+	In particular, usual options such as `keep if _merge == 3` takes a different meaning with the option `update`. To avoid this problem, use the `keep` option as in `merge 1:1 using usingfile, keep(matched)` which corresponds to `keep if inrange(_merge, 3, 5)`
+
 
 # Panel Data
 - To lag a variable `v` in an unbalanced panel, use the operators `L.v` and `F.v` (which return the variable value at the past/future period) rather than `v[_n-1]` and `v[_n+1]` (which return the variable value at the previous/next row)
