@@ -325,4 +325,4 @@ Types issues are discusses [here](http://blog.stata.com/tag/precision/)
 Stata does not support positive / negative look aheads / behind, nor counting operators (using braces).
 
 # Panel Data
-- To lag a variable `v` in an unbalanced panel, use the operators `L.v` and `F.v` (which return the variable value at the past/future period) rather than `v[n-1]` and `v[n+1]` (which return the variable value at the previous/next row)
+- To lag a variable `v` in an unbalanced panel, use the operators `L.v` and `F.v` (which return the variable value at the past/future period) rather than `v[_n-1]` and `v[_n+1]` (which return the variable value at the previous/next row)
