@@ -20,7 +20,7 @@ I have uploaded this list on Github so that it can be easily modified: feel free
 
 - Missing observations for numeric variables are sorted last in Stata. Therefore expressions such as
 	```
-	by id (time): gen temp = time[_N]
+	bysort id (time): gen temp = time[_N]
 	```
 	returns a missing value rather than the maximum time if `time` observation is missing. Instead, use
 
@@ -40,7 +40,6 @@ I have uploaded this list on Github so that it can be easily modified: feel free
 	. c
 	. end
 	. sort strvar
-
 	. list
 
 	     +--------+
