@@ -22,7 +22,8 @@ I have uploaded this list on Github so that it can be easily modified: feel free
 	```
 	bysort id (time): gen temp = time[_N]
 	```
-	return a missing value rather than the maximum time if `time` observation is missing. Instead, use
+
+	return a missing value rather than the maximum time if some `time` observation is missing. Instead, use
 
 	```
 	egen temp = max(time), by(id)
