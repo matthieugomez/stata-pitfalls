@@ -30,6 +30,7 @@ egen temp = max(time), by(id)
 
 - In contrast, missing observations for *string* variables are sorted first:
 
+```
 . clear
 . input str5 strvar
 . a
@@ -51,7 +52,7 @@ egen temp = max(time), by(id)
   4. |      c |
   5. |      g |
      +--------+
-
+```
 
 ### Arithmetic operations
 
