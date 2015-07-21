@@ -372,7 +372,12 @@ Beyond the issue with missing value mentioned above, `collapse` can give unexpec
 	        nonmissing conflict                   (_merge==5)
 
 	```
-	In particular, usual options such as `keep if _merge == 3` takes a different meaning with the option `update`. To avoid this problem, use the `keep` option as in `merge 1:1 using usingfile, keep(matched)` which corresponds to `keep if inrange(_merge, 3, 5)`
+	In particular, usual follow up commands such as `keep if _merge == 3` takes a different meaning with the option `update`. To avoid this problem, direclty use the `keep` option in merge 
+
+	 ```
+	 . merge 1:1 using usingfile, update keep(matched) 
+	 ```
+	 This returns the same result as `keep if inrange(_merge, 3, 5)`
 
 
 # Panel Data
