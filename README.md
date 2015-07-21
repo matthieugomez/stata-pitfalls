@@ -16,6 +16,29 @@ returns a missing value rather than the maximum time if `time` observation is mi
 egen temp = max(time), by(id)
 ```
 
+But beware, this is only true for numeric variables. Missing string values are sorted first:
+
+```
+clear
+set more off
+
+input ///
+str5 strvar
+a
+b
+"" // a missing
+g
+c
+end
+
+list
+
+sort strvar
+
+list
+list if missing(strvar)
+```
+
 ### Arithmetic operations
 
 - *Explicit* arithmetic operations containing a missing value return a missing value
