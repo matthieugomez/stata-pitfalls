@@ -19,40 +19,40 @@ I have uploaded this list on Github so that it can be easily modified: feel free
 ### Sort
 
 - Missing observations for numeric variables are sorted last in Stata. Therefore expressions such as
-```
-by id (time): gen temp = time[_N]
-```
-returns a missing value rather than the maximum time if `time` observation is missing. Instead, use
+	```
+	by id (time): gen temp = time[_N]
+	```
+	returns a missing value rather than the maximum time if `time` observation is missing. Instead, use
 
-```
-egen temp = max(time), by(id)
-```
+	```
+	egen temp = max(time), by(id)
+	```
 
 - In contrast, missing observations for *string* variables are sorted first:
 
-```
-. clear
-. input str5 strvar
-. a
-. b
-. "" 
-. g
-. c
-. end
-. sort strvar
+	```
+	. clear
+	. input str5 strvar
+	. a
+	. b
+	. "" 
+	. g
+	. c
+	. end
+	. sort strvar
 
-. list
+	. list
 
-     +--------+
-     | strvar |
-     |--------|
-  1. |        |
-  2. |      a |
-  3. |      b |
-  4. |      c |
-  5. |      g |
-     +--------+
-```
+	     +--------+
+	     | strvar |
+	     |--------|
+	  1. |        |
+	  2. |      a |
+	  3. |      b |
+	  4. |      c |
+	  5. |      g |
+	     +--------+
+	```
 
 ### Arithmetic operations
 
