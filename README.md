@@ -1,4 +1,4 @@
-Common situations where Stata *silently* returns something different than what you have in mind. 
+Common situations where Stata silently returns something different from what you may have in mind. 
 
 I have uploaded this list on Github so that it can be easily modified: feel free to [edit it](https://github.com/matthieugomez/stata-gotchas/edit/master/README.md).
 
