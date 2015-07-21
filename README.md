@@ -218,7 +218,7 @@ Floats can store integers accurately only up to 2^24 = 16,777,216.  In other wor
 	    id |   2.00e+07   2.00e+07
 	```
 
-- Creating a variable representing date of the form YYYYMMDD 
+ 	The same issue happens when creating a variable representing dates of the form YYYYMMDD 
 
 	```
 	. clear
