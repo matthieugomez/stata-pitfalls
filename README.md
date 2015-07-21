@@ -59,7 +59,7 @@ I have uploaded this list on Github so that it can be easily modified: feel free
 - *Explicit* arithmetic operations containing missing values return missing values
 
 	```
-	. clear all
+	. clear
 	. set obs 1
 	. gen a = 1
 	. gen b = .
@@ -77,7 +77,7 @@ I have uploaded this list on Github so that it can be easily modified: feel free
 - `collapse (sum)` and `egen sum`, and `rowsum` transform missing values to zero. In particular, the sum of a variable over a set of missing observations is zero, rather than missing
 
 	```
-	. clear all
+	. clear
 	. set obs 1
 	. gen a = .
 	. collapse (sum) sum = a (mean) mean = a (sd) sd = a
@@ -93,7 +93,7 @@ I have uploaded this list on Github so that it can be easily modified: feel free
 	If you want the sum of missing observations to be missing rather than zero, use a temporary variable to count non-missing observations.
 
 	```
-	. clear all
+	. clear
 	. set obs 1
 	. gen a = .
 	. gen nonmissing = !missing(a)
@@ -119,7 +119,7 @@ I have uploaded this list on Github so that it can be easily modified: feel free
 	As an example, the following code generates `y` and `x` such that `y = 2*x + runiform()`,  then set `x` to missing every 13 rows, and `y` to missing every 11 rows.
 
 	```
-	. clear all
+	. clear
 	. set seed 10
 	. set obs 10000
 	. gen a = mod(_n, 1000)
@@ -152,7 +152,7 @@ I have uploaded this list on Github so that it can be easily modified: feel free
 	To avoid this situation, first flag/remove all missing observations where any of the variable is missing
 
 	```
-	. clear all
+	. clear
 	. set seed 10
 	. set obs 10000
 	. gen a = mod(_n, 1000)
@@ -192,7 +192,7 @@ Floats can store integers accurately only up to 2^24 = 16,777,216.  In other wor
 
 - Creating an identifying variable
 	```
-	. clear all
+	. clear
 	. set obs 20000000
 	. gen id = _n
 	```	
@@ -208,7 +208,7 @@ Floats can store integers accurately only up to 2^24 = 16,777,216.  In other wor
 
 	Rather, use `long` in the `generate` command
 	```
-	. clear all
+	. clear
 	. set obs 20000000
 	. gen long id = _n
 	. distinct id
@@ -217,6 +217,19 @@ Floats can store integers accurately only up to 2^24 = 16,777,216.  In other wor
 	-------+----------------------
 	    id |   2.00e+07   2.00e+07
 	```
+
+- Creating a variable representing date of the form YYYYMMDD 
+
+	```
+	. clear
+	. set obs 1
+	. gen a = 19991203
+	. display a[1]
+		19991204
+	```
+
+
+
 - Converting a string to an integer, `real()` converts the string variable to a float by default. Rather, use 
 	
 	````
@@ -242,7 +255,7 @@ Floats can store integers accurately only up to 2^24 = 16,777,216.  In other wor
 
 Floats should not be used in equality conditions
 ```
-. clear all
+. clear
 . set obs 1
 . gen a = 1.1
 . display a[1] == 1.1
@@ -268,7 +281,7 @@ Stata considers any value different from zero is considered as true
 ### Missing values
 Since missing values are considered to be higher than anything, they are, in particular, true. Therefore, in the following command, the last condition evaluates to true for all observations
 ```
-. clear all
+. clear
 . set obs 10
 . gen condition = 1 if _n >= 5
 . keep if condition
@@ -278,7 +291,7 @@ Since missing values are considered to be higher than anything, they are, in par
 To avoid this issue, create boolean variable alternatively equal 1 and 0,  rather than rather 1 and missing.
 
 ```
-. clear all
+. clear
 . set obs 10
 . gen condition =_n >= 5
 . keep if condition
@@ -308,7 +321,7 @@ Beyond the issue with missing value mentioned above, `collapse` can give unexpec
 -  Observations with missing or zero weights are removed from  *all* the computations, even those in (rawsum)
 
 	```
-	. clear all
+	. clear
 	. set obs 2
 	. gen a  = 1
 	. gen w = 1 if _n == 1
@@ -326,7 +339,7 @@ Beyond the issue with missing value mentioned above, `collapse` can give unexpec
 -  `collapse (sum) [aw]` (the default) and `collapse (sum) [pw]` returns` \sum w_i v_i` where w_i is normalized so that \sum w_i = _N. 
 
 	```
-	. clear all
+	. clear
 	. set obs 2
 	. gen a  = _n
 	. gen b = 1
@@ -337,7 +350,7 @@ Beyond the issue with missing value mentioned above, `collapse` can give unexpec
 	If you want `collapse(sum) ` to return `\sum w_i v_i`, use `iweight` or `fweight`
 
 	```
-	. clear all
+	. clear
 	. set obs 2
 	. gen a  = _n
 	. gen b = 1
